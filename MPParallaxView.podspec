@@ -10,7 +10,8 @@ Pod::Spec.new do |s|
     s.author           = { "Michal Pyrka" => "michal.pyrka@droidsonroids.pl" }
     s.source           = { :git => "https://github.com/DroidsOnRoids/MPParallaxView.git", :tag => s.version.to_s }
     s.social_media_url = 'https://twitter.com/mike_p3'
-    s.platform     = :ios, '9.0'
+    s.ios.deployment_target = '9.0'
+    s.tvos.deployment_target = '9.0'
     s.source_files = 'MPParallaxView.swift'
     s.resource_bundles = { 'MPParallaxView' => ['Assets/gloweffect.png'] }
     s.frameworks = 'UIKit', 'CoreMotion'

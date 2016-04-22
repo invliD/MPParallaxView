@@ -6,7 +6,9 @@
 //
 
 import UIKit
-import CoreMotion
+#if os(iOS)
+    import CoreMotion
+#endif
 
 public enum ViewState {
     case Initial, Pick, PutDown
@@ -53,6 +55,7 @@ public class MPParallaxView: UIView {
     var glowEffect: UIImageView = UIImageView()
     
     //MARK: CoreMotion
+#if os(iOS)
     private lazy var motionManager: CMMotionManager = CMMotionManager()
     private var accelerometerMovement: AccelerometerMovement?
     @IBInspectable public var accelerometerEnabled: Bool = false {
@@ -62,6 +65,7 @@ public class MPParallaxView: UIView {
             }
         }
     }
+#endif
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -82,6 +86,7 @@ public class MPParallaxView: UIView {
     }
     
     public func prepareForNewViews() {
+#if os(iOS)
         if accelerometerEnabled {
             glowEffect.alpha = 0.0
             layer.transform = CATransform3DIdentity
@@ -89,10 +94,12 @@ public class MPParallaxView: UIView {
                 subview.layer.transform = CATransform3DIdentity
             }
         }
+#endif
         subviews.forEach { $0.removeFromSuperview() }
         contentView.subviews.forEach { $0.removeFromSuperview() }
     }
     
+#if os(iOS)
     override public func awakeFromNib() {
         super.awakeFromNib()
         prepareForMotionDetection()
@@ -110,6 +117,7 @@ public class MPParallaxView: UIView {
             }
         }
     }
+#endif
     
     private func setupLayout() {
         layer.shadowRadius = initialShadowRadius
@@ -254,11 +262,13 @@ public class MPParallaxView: UIView {
     private func applyParallaxEffectOnView(basedOnTouch touch: UITouch?) {
         var parallaxOffset = parallaxOffsetDuringPick
         var offsetX: CGFloat = 0.0, offsetY: CGFloat = 0.0
+#if os(iOS)
         if let accelerometerMovement = accelerometerMovement {
             offsetX = CGFloat(accelerometerMovement.x * 0.25)
             offsetY = CGFloat(accelerometerMovement.y * -0.25)
             parallaxOffset *= 2.0
         }
+#endif
         
         if let touch = touch, let superview = superview where offsetX == 0.0 && offsetY == 0.0 {
             offsetX = (0.5 - touch.locationInView(superview).x / superview.bounds.width) * -1
